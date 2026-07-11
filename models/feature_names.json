@@ -1,0 +1,36 @@
+{
+  "feature_names": [
+    "Va",
+    "Vb",
+    "Vc",
+    "Ia",
+    "Ib",
+    "Ic",
+    "freq_deviation",
+    "thd",
+    "power_factor",
+    "temperature",
+    "V_imbalance",
+    "I_imbalance",
+    "apparent_power",
+    "V_negative_seq",
+    "I_negative_seq"
+  ],
+  "selected_features": [
+    "Va",
+    "Vb",
+    "Vc",
+    "Ia",
+    "Ib",
+    "Ic",
+    "freq_deviation",
+    "thd",
+    "power_factor",
+    "temperature",
+    "V_imbalance",
+    "I_imbalance",
+    "apparent_power",
+    "V_negative_seq",
+    "I_negative_seq"
+  ]
+}

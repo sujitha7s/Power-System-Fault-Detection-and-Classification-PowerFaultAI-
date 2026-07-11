@@ -1,0 +1,472 @@
+{
+  "best_model": "svm",
+  "primary_metric": "f1_weighted",
+  "best_score": 0.997,
+  "feature_importance": {},
+  "models": {
+    "random_forest": {
+      "model_name": "random_forest",
+      "accuracy": 0.99,
+      "f1_weighted": 0.99,
+      "precision_weighted": 0.99,
+      "recall_weighted": 0.99,
+      "roc_auc_weighted": 0.9998,
+      "confusion_matrix": [
+        [
+          300,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          200,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          174,
+          6,
+          0
+        ],
+        [
+          0,
+          0,
+          4,
+          166,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          150
+        ]
+      ],
+      "classification_report": {
+        "Normal Operation": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 300.0
+        },
+        "Line-to-Ground Fault": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 200.0
+        },
+        "Line-to-Line Fault": {
+          "precision": 0.9775280898876404,
+          "recall": 0.9666666666666667,
+          "f1-score": 0.9720670391061452,
+          "support": 180.0
+        },
+        "Double Line-to-Ground Fault": {
+          "precision": 0.9651162790697675,
+          "recall": 0.9764705882352941,
+          "f1-score": 0.9707602339181286,
+          "support": 170.0
+        },
+        "Three-Phase Fault": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 150.0
+        },
+        "accuracy": 0.99,
+        "macro avg": {
+          "precision": 0.9885288737914817,
+          "recall": 0.9886274509803922,
+          "f1-score": 0.9885654546048548,
+          "support": 1000.0
+        },
+        "weighted avg": {
+          "precision": 0.9900248236216357,
+          "recall": 0.99,
+          "f1-score": 0.990001306805188,
+          "support": 1000.0
+        }
+      }
+    },
+    "xgboost": {
+      "model_name": "xgboost",
+      "accuracy": 0.996,
+      "f1_weighted": 0.996,
+      "precision_weighted": 0.996,
+      "recall_weighted": 0.996,
+      "roc_auc_weighted": 0.9999,
+      "confusion_matrix": [
+        [
+          300,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          200,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          178,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          168,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          150
+        ]
+      ],
+      "classification_report": {
+        "Normal Operation": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 300.0
+        },
+        "Line-to-Ground Fault": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 200.0
+        },
+        "Line-to-Line Fault": {
+          "precision": 0.9888888888888889,
+          "recall": 0.9888888888888889,
+          "f1-score": 0.9888888888888889,
+          "support": 180.0
+        },
+        "Double Line-to-Ground Fault": {
+          "precision": 0.9882352941176471,
+          "recall": 0.9882352941176471,
+          "f1-score": 0.9882352941176471,
+          "support": 170.0
+        },
+        "Three-Phase Fault": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 150.0
+        },
+        "accuracy": 0.996,
+        "macro avg": {
+          "precision": 0.9954248366013072,
+          "recall": 0.9954248366013072,
+          "f1-score": 0.9954248366013072,
+          "support": 1000.0
+        },
+        "weighted avg": {
+          "precision": 0.996,
+          "recall": 0.996,
+          "f1-score": 0.996,
+          "support": 1000.0
+        }
+      }
+    },
+    "decision_tree": {
+      "model_name": "decision_tree",
+      "accuracy": 0.982,
+      "f1_weighted": 0.982,
+      "precision_weighted": 0.9822,
+      "recall_weighted": 0.982,
+      "roc_auc_weighted": 0.9937,
+      "confusion_matrix": [
+        [
+          299,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          200,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          168,
+          11,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          165,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          150
+        ]
+      ],
+      "classification_report": {
+        "Normal Operation": {
+          "precision": 0.9966666666666667,
+          "recall": 0.9966666666666667,
+          "f1-score": 0.9966666666666667,
+          "support": 300.0
+        },
+        "Line-to-Ground Fault": {
+          "precision": 0.9950248756218906,
+          "recall": 1.0,
+          "f1-score": 0.9975062344139651,
+          "support": 200.0
+        },
+        "Line-to-Line Fault": {
+          "precision": 0.9710982658959537,
+          "recall": 0.9333333333333333,
+          "f1-score": 0.9518413597733711,
+          "support": 180.0
+        },
+        "Double Line-to-Ground Fault": {
+          "precision": 0.9375,
+          "recall": 0.9705882352941176,
+          "f1-score": 0.953757225433526,
+          "support": 170.0
+        },
+        "Three-Phase Fault": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 150.0
+        },
+        "accuracy": 0.982,
+        "macro avg": {
+          "precision": 0.9800579616369023,
+          "recall": 0.9801176470588235,
+          "f1-score": 0.9799542972575057,
+          "support": 1000.0
+        },
+        "weighted avg": {
+          "precision": 0.9821776629856498,
+          "recall": 0.982,
+          "f1-score": 0.9819714199656993,
+          "support": 1000.0
+        }
+      }
+    },
+    "svm": {
+      "model_name": "svm",
+      "accuracy": 0.997,
+      "f1_weighted": 0.997,
+      "precision_weighted": 0.997,
+      "recall_weighted": 0.997,
+      "roc_auc_weighted": 1.0,
+      "confusion_matrix": [
+        [
+          300,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          200,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          178,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          169,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          150
+        ]
+      ],
+      "classification_report": {
+        "Normal Operation": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 300.0
+        },
+        "Line-to-Ground Fault": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 200.0
+        },
+        "Line-to-Line Fault": {
+          "precision": 0.994413407821229,
+          "recall": 0.9888888888888889,
+          "f1-score": 0.9916434540389972,
+          "support": 180.0
+        },
+        "Double Line-to-Ground Fault": {
+          "precision": 0.9883040935672515,
+          "recall": 0.9941176470588236,
+          "f1-score": 0.9912023460410557,
+          "support": 170.0
+        },
+        "Three-Phase Fault": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 150.0
+        },
+        "accuracy": 0.997,
+        "macro avg": {
+          "precision": 0.996543500277696,
+          "recall": 0.9966013071895425,
+          "f1-score": 0.9965691600160106,
+          "support": 1000.0
+        },
+        "weighted avg": {
+          "precision": 0.997006109314254,
+          "recall": 0.997,
+          "f1-score": 0.997000220553999,
+          "support": 1000.0
+        }
+      }
+    },
+    "logistic_regression": {
+      "model_name": "logistic_regression",
+      "accuracy": 0.996,
+      "f1_weighted": 0.996,
+      "precision_weighted": 0.996,
+      "recall_weighted": 0.996,
+      "roc_auc_weighted": 1.0,
+      "confusion_matrix": [
+        [
+          300,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          200,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          177,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          169,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          150
+        ]
+      ],
+      "classification_report": {
+        "Normal Operation": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 300.0
+        },
+        "Line-to-Ground Fault": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 200.0
+        },
+        "Line-to-Line Fault": {
+          "precision": 0.9943820224719101,
+          "recall": 0.9833333333333333,
+          "f1-score": 0.9888268156424581,
+          "support": 180.0
+        },
+        "Double Line-to-Ground Fault": {
+          "precision": 0.9825581395348837,
+          "recall": 0.9941176470588236,
+          "f1-score": 0.9883040935672515,
+          "support": 170.0
+        },
+        "Three-Phase Fault": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 150.0
+        },
+        "accuracy": 0.996,
+        "macro avg": {
+          "precision": 0.9953880324013588,
+          "recall": 0.9954901960784314,
+          "f1-score": 0.9954261818419419,
+          "support": 1000.0
+        },
+        "weighted avg": {
+          "precision": 0.996023647765874,
+          "recall": 0.996,
+          "f1-score": 0.9960005227220752,
+          "support": 1000.0
+        }
+      }
+    }
+  },
+  "dataset_info": {
+    "total_samples": 5000,
+    "train_samples": 4000,
+    "test_samples": 1000,
+    "n_features": 15,
+    "selected_features": 15,
+    "class_counts": {
+      "Normal": 1500,
+      "LG": 1000,
+      "LL": 900,
+      "LLG": 850,
+      "LLL": 750
+    }
+  }
+}

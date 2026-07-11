@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block title %}About — PowerFaultAI{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:860px">
+
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <div class="stat-icon blue"><i class="bi bi-info-circle-fill"></i></div>
+    <div>
+      <h2 class="mb-0 fw-800">About PowerFault AI</h2>
+      <small class="text-muted">Architecture, model details, and usage guide</small>
+    </div>
+    <a href="/" class="btn btn-outline-secondary btn-sm ms-auto">
+      <i class="bi bi-arrow-left me-1"></i>Back
+    </a>
+  </div>
+
+  <!-- Overview -->
+  <div class="card-glass p-4 mb-4">
+    <h5 class="fw-800 mb-3"><i class="bi bi-lightning-charge-fill text-accent me-2"></i>Project Overview</h5>
+    <p class="text-muted">
+      <strong>PowerFault AI</strong> is a machine learning–powered web application that detects and classifies
+      power system faults in real time. It accepts 10 electrical sensor measurements as input, derives 5 additional
+      physics-based features, and classifies the power system condition into one of 5 categories using a trained
+      ensemble classifier.
+    </p>
+    <div class="row g-3 mt-1">
+      <div class="col-md-6">
+        <div style="background:var(--surface2);border-radius:10px;padding:1rem;">
+          <div class="fw-700 mb-2 text-accent">⚡ Technical Stack</div>
+          <ul class="text-muted small mb-0 ps-3">
+            <li>Python 3.8+ / Flask 3.x backend</li>
+            <li>Scikit-learn + XGBoost ML pipeline</li>
+            <li>Bootstrap 5 + Chart.js frontend</li>
+            <li>Joblib model serialization</li>
+            <li>REST API with JSON responses</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div style="background:var(--surface2);border-radius:10px;padding:1rem;">
+          <div class="fw-700 mb-2 text-accent">🎯 Key Features</div>
+          <ul class="text-muted small mb-0 ps-3">
+            <li>Multi-model training &amp; automatic best-model selection</li>
+            <li>Confidence-based uncertainty detection</li>
+            <li>Root cause + maintenance recommendations</li>
+            <li>Interactive analytics dashboard</li>
+            <li>Dark mode + full mobile responsiveness</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fault types -->
+  <div class="card-glass p-4 mb-4">
+    <h5 class="fw-800 mb-3"><i class="bi bi-layers-fill text-accent me-2"></i>Fault Classification Categories</h5>
+    <div class="row g-3">
+      {% set faults = [
+        ('Normal Operation','0','success','check-circle-fill','System operating within nominal parameters. All phase voltages and currents balanced. THD low.'),
+        ('Line-to-Ground (L-G)','1','warning','exclamation-triangle-fill','Single conductor contacts ground. Phase A voltage collapses; Phase A current spikes 3–4×. Most common fault type (~80% of all faults).'),
+        ('Line-to-Line (L-L)','2','warning','exclamation-circle-fill','Two conductors short-circuit. Affected phase voltages drop; affected currents rise 2–3×. No ground involvement.'),
+        ('Double Line-to-Ground (DLG)','3','danger','exclamation-octagon-fill','Two conductors shorted to ground. Severe voltage depression on two phases; high fault currents on both.'),
+        ('Three-Phase (LLL)','4','dark','x-octagon-fill','All three conductors short-circuit. All voltages collapse near zero; all currents spike to 4× nominal. Most severe fault.'),
+      ] %}
+      {% for name, lbl, color, icon, desc in faults %}
+      <div class="col-12">
+        <div class="d-flex gap-3 p-3 rounded-3" style="background:var(--surface2);border:1px solid var(--border)">
+          <div class="flex-shrink-0 mt-1">
+            <i class="bi bi-{{ icon }} text-{{ color }} fs-4"></i>
+          </div>
+          <div>
+            <div class="fw-700">{{ name }} <span class="badge bg-{{ color }} {% if color=='warning' %}text-dark{% endif %} ms-1">Class {{ lbl }}</span></div>
+            <div class="text-muted small mt-1">{{ desc }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Input features -->
+  <div class="card-glass p-4 mb-4">
+    <h5 class="fw-800 mb-3"><i class="bi bi-sliders text-accent me-2"></i>Input Features</h5>
+    <div class="table-responsive">
+      <table class="table table-sm mb-0" style="font-size:.88rem;">
+        <thead>
+          <tr><th>#</th><th>Feature</th><th>Unit</th><th>Range</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          {% set feats = [
+            ('Va','p.u.','0–2.0','Phase A voltage (per-unit, nominal = 1.0)'),
+            ('Vb','p.u.','0–2.0','Phase B voltage'),
+            ('Vc','p.u.','0–2.0','Phase C voltage'),
+            ('Ia','p.u.','0–8.0','Phase A current (per-unit)'),
+            ('Ib','p.u.','0–8.0','Phase B current'),
+            ('Ic','p.u.','0–8.0','Phase C current'),
+            ('freq_deviation','Hz','±2.0','Frequency deviation from nominal (50/60 Hz)'),
+            ('thd','%','0–40','Total Harmonic Distortion'),
+            ('power_factor','—','0–1.0','System power factor'),
+            ('temperature','°C','20–180','Equipment operating temperature'),
+            ('V_imbalance','—','derived','Voltage imbalance ratio (computed)'),
+            ('I_imbalance','—','derived','Current imbalance ratio (computed)'),
+            ('apparent_power','p.u.','derived','Three-phase apparent power (computed)'),
+            ('V_negative_seq','—','derived','Negative sequence voltage component (computed)'),
+            ('I_negative_seq','—','derived','Negative sequence current component (computed)'),
+          ] %}
+          {% for name, unit, rng, desc in feats %}
+          <tr>
+            <td class="text-muted">{{ loop.index }}</td>
+            <td><code>{{ name }}</code></td>
+            <td><span class="badge bg-secondary">{{ unit }}</span></td>
+            <td class="text-muted">{{ rng }}</td>
+            <td class="text-muted">{{ desc }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- API reference -->
+  <div class="card-glass p-4 mb-4">
+    <h5 class="fw-800 mb-3"><i class="bi bi-code-slash text-accent me-2"></i>REST API Reference</h5>
+    <div class="row g-3">
+      {% set endpoints = [
+        ('POST','/api/predict','Submit raw sensor readings; returns fault prediction + metadata'),
+        ('POST','/api/quick_predict','Load a preset scenario (normal|lg|ll|llg|lll)'),
+        ('GET', '/api/metrics','Full model training metrics + dataset stats'),
+        ('GET', '/api/history','Session prediction history (last 50)'),
+        ('POST','/api/retrain','Retrain all models and deploy best performer'),
+      ] %}
+      {% for method, path, desc in endpoints %}
+      <div class="col-12">
+        <div class="d-flex align-items-start gap-3 p-3 rounded-3" style="background:var(--surface2);font-size:.88rem;">
+          <span class="badge fw-700 px-2 {% if method=='GET' %}bg-success{% else %}bg-primary{% endif %}">{{ method }}</span>
+          <code class="flex-shrink-0">{{ path }}</code>
+          <span class="text-muted">{{ desc }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Quick start -->
+  <div class="card-glass p-4 mb-4">
+    <h5 class="fw-800 mb-3"><i class="bi bi-terminal text-accent me-2"></i>Quick Start</h5>
+    <pre style="background:var(--surface2);border-radius:10px;padding:1.2rem;font-size:.85rem;overflow-x:auto;color:var(--text);"><code># 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Train models (generates dataset + trains 5 models)
+cd PowerFaultDetector
+python ml/train_models.py
+
+# 3. Start the application
+python app.py
+
+# 4. Open in browser
+# http://localhost:5000</code></pre>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block title %}Prediction History — PowerFaultAI{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <div class="stat-icon purple"><i class="bi bi-clock-history"></i></div>
+    <div>
+      <h2 class="mb-0 fw-800">Prediction History</h2>
+      <small class="text-muted">Last {{ history | length }} predictions (session)</small>
+    </div>
+    <div class="ms-auto d-flex gap-2">
+      <button class="btn btn-outline-danger btn-sm" id="btnClearHistory">
+        <i class="bi bi-trash me-1"></i>Clear
+      </button>
+      <a href="/" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Back
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats summary -->
+  {% if history %}
+  <div class="row g-3 mb-4" id="histStats">
+    {% set total = history | length %}
+    {% set normal_count = history | selectattr('predicted_label','equalto',0) | list | length %}
+    {% set fault_count  = total - normal_count %}
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="bi bi-list-check"></i></div>
+        <div><div class="stat-value">{{ total }}</div><div class="stat-label">Total Predictions</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="bi bi-check-circle"></i></div>
+        <div><div class="stat-value">{{ normal_count }}</div><div class="stat-label">Normal Operations</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="bi bi-exclamation-triangle"></i></div>
+        <div><div class="stat-value">{{ fault_count }}</div><div class="stat-label">Faults Detected</div></div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon amber"><i class="bi bi-bar-chart"></i></div>
+        <div>
+          <div class="stat-value">
+            {% if history %}
+              {% set avg_conf = (history | map(attribute='confidence') | select('ne', None) | list | sum) / (history | map(attribute='confidence') | select('ne', None) | list | length + 0.001) %}
+              {{ (avg_conf * 100) | round(1) }}%
+            {% else %}—{% endif %}
+          </div>
+          <div class="stat-label">Avg Confidence</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History chart -->
+  <div class="card-glass p-4 mb-4">
+    <div class="chart-title"><i class="bi bi-pie-chart me-2 text-accent"></i>Fault Distribution (This Session)</div>
+    <div class="row align-items-center">
+      <div class="col-md-5">
+        <canvas id="histPieChart" height="220"></canvas>
+      </div>
+      <div class="col-md-7">
+        <canvas id="histConfChart" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card-glass p-0 overflow-hidden">
+    <div class="p-3 border-bottom">
+      <input type="text" class="form-control form-control-sm" id="searchHistory"
+             placeholder="🔍  Filter by fault type or timestamp…" style="max-width:320px"/>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm mb-0" id="histTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Timestamp</th>
+            <th>Fault Type</th>
+            <th>Severity</th>
+            <th>Confidence</th>
+            <th>Va/Vb/Vc</th>
+            <th>Ia/Ib/Ic</th>
+            <th>Temp</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in history %}
+          {% set sev = h.severity | lower %}
+          <tr data-fault="{{ h.predicted_class | lower }}" data-ts="{{ h.timestamp }}">
+            <td class="text-muted small">{{ loop.index }}</td>
+            <td class="small text-muted">{{ h.timestamp[:19] | replace('T',' ') }}</td>
+            <td>
+              <span class="badge badge-pill
+                {% if h.predicted_label == 0 %}bg-success
+                {% elif h.predicted_label <= 2 %}bg-warning text-dark
+                {% else %}bg-danger{% endif %}">
+                {{ h.predicted_class }}
+              </span>
+            </td>
+            <td>
+              <span class="badge
+                {% if sev == 'none' %}bg-success
+                {% elif sev == 'moderate' %}bg-warning text-dark
+                {% elif sev == 'high' %}bg-danger
+                {% else %}bg-dark{% endif %}">
+                {{ h.severity }}
+              </span>
+            </td>
+            <td>
+              {% if h.confidence %}
+                <div class="d-flex align-items-center gap-2">
+                  <div style="width:60px;background:var(--border);border-radius:6px;height:6px;overflow:hidden;">
+                    <div style="width:{{ (h.confidence*100)|int }}%;height:100%;background:
+                      {% if h.confidence>0.8 %}#22c55e{% elif h.confidence>0.6 %}#f59e0b{% else %}#ef4444{% endif %};
+                      border-radius:6px;"></div>
+                  </div>
+                  <span class="small fw-600">{{ (h.confidence*100)|round(1) }}%</span>
+                </div>
+              {% else %}<span class="text-muted">—</span>{% endif %}
+            </td>
+            <td class="small">
+              {% if h.raw_inputs %}
+                {{ h.raw_inputs.Va | round(2) }} /
+                {{ h.raw_inputs.Vb | round(2) }} /
+                {{ h.raw_inputs.Vc | round(2) }}
+              {% else %}—{% endif %}
+            </td>
+            <td class="small">
+              {% if h.raw_inputs %}
+                {{ h.raw_inputs.Ia | round(2) }} /
+                {{ h.raw_inputs.Ib | round(2) }} /
+                {{ h.raw_inputs.Ic | round(2) }}
+              {% else %}—{% endif %}
+            </td>
+            <td class="small">
+              {% if h.raw_inputs %}{{ h.raw_inputs.temperature | round(1) }} °C{% else %}—{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% else %}
+  <!-- Empty state -->
+  <div class="card-glass p-5 text-center">
+    <div style="font-size:4rem;opacity:.2"><i class="bi bi-clock-history"></i></div>
+    <h4 class="mt-3 fw-700">No predictions yet</h4>
+    <p class="text-muted">Predictions you make on the dashboard will appear here.</p>
+    <a href="/" class="btn btn-primary mt-2">
+      <i class="bi bi-lightning-charge me-2"></i>Make a Prediction
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if history %}
+<script>
+const HIST_DATA = {{ history | tojson }};
+const PALETTE   = ['#22c55e','#f59e0b','#f97316','#ef4444','#dc2626'];
+const FAULT_LABELS = ['Normal Operation','Line-to-Ground Fault','Line-to-Line Fault',
+                      'Double Line-to-Ground Fault','Three-Phase Fault'];
+
+/* ── Pie chart ───────────────────────────────────────────────── */
+(function() {
+  const counts = [0,0,0,0,0];
+  HIST_DATA.forEach(h => { counts[h.predicted_label]++; });
+  new Chart(document.getElementById('histPieChart'), {
+    type: 'doughnut',
+    data: {
+      labels: FAULT_LABELS,
+      datasets:[{ data:counts, backgroundColor:PALETTE,
+                  borderWidth:3, borderColor: document.documentElement.getAttribute('data-theme')==='dark'?'#161b27':'#fff' }],
+    },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'60%',
+      plugins:{ legend:{ position:'bottom', labels:{ font:{size:11}, color:'var(--text)' }}} },
+  });
+})();
+
+/* ── Confidence line chart ───────────────────────────────────── */
+(function() {
+  const labels = HIST_DATA.map((_,i)=> '#'+(i+1));
+  const confs  = HIST_DATA.map(h => h.confidence ? +(h.confidence*100).toFixed(1) : null);
+  new Chart(document.getElementById('histConfChart'), {
+    type:'line',
+    data:{
+      labels,
+      datasets:[{ label:'Confidence (%)', data:confs,
+        borderColor:'#3b6ff0', backgroundColor:'rgba(59,111,240,.1)',
+        fill:true, tension:.35, pointRadius:3, pointBackgroundColor:'#3b6ff0' }],
+    },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{color:'var(--text)'} }},
+      scales:{ x:{ticks:{color:'var(--text)',maxTicksLimit:12}, grid:{color:'rgba(0,0,0,.06)'}},
+               y:{min:0,max:100,ticks:{color:'var(--text)',callback:v=>v+'%'}, grid:{color:'rgba(0,0,0,.06)'}} },
+    },
+  });
+})();
+
+/* ── Search / filter ─────────────────────────────────────────── */
+document.getElementById('searchHistory').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  document.querySelectorAll('#histTable tbody tr').forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(q) ? '' : 'none';
+  });
+});
+
+/* ── Clear history ───────────────────────────────────────────── */
+document.getElementById('btnClearHistory').addEventListener('click', function() {
+  if (confirm('Clear all prediction history?')) {
+    fetch('/api/history').then(() => location.reload());
+  }
+});
+</script>
+{% endif %}
+{% endblock %}

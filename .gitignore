@@ -1,0 +1,23 @@
+﻿# PowerFaultAI .gitignore
+.env
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+env/
+venv/
+.venv/
+ENV/
+*.egg-info/
+dist/
+build/
+models/*.pkl
+models/*.joblib
+data/*.csv
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+*.log
+logs/
